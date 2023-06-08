@@ -3,7 +3,7 @@ import createJWT from "@/utils/createJWT";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 
-let token = createJWT({ iss: env.API_KEY }, env.API_SECRET);
+let token = createJWT({ iss: env.API_KEY, aud: null }, env.API_SECRET);
 
 /**
  * axios instance with zoom api base url and authorization header
