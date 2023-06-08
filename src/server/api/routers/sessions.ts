@@ -14,7 +14,7 @@ export const sessionRouter = createTRPCRouter({
       const sessions = await videoAPI.get<Sessions>("/videosdk/sessions", {
         data: { type: input.type },
       });
-      return sessions;
+      return sessions.data;
     }),
   get: publicProcedure
     .input(
@@ -26,6 +26,6 @@ export const sessionRouter = createTRPCRouter({
       const session = await videoAPI.get<Session>(
         `/videosdk/sessions/${input.id}`
       );
-      return session;
+      return session.data;
     }),
 });
