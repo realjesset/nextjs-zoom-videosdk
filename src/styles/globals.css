@@ -1,3 +1,74 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: var(--b1);
+    --foreground: var(--bc);
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: var(--b1);
+    --popover-foreground: var(--bc);
+
+    --card: var(--b2);
+    --card-foreground: var(--bc);
+
+    --border: var(--b3);
+    --input: var(--b3);
+
+    --primary-foreground: var(--pc);
+
+    --secondary-foreground: var(--sc);
+
+    --accent-foreground: var(--ac);
+
+    --destructive: var(--er);
+    --destructive-foreground: var(--ec);
+
+    --ring: var(--b3);
+
+    --radius: var(--rounded-btn);
+  }
+
+  .dark {
+    --background: var(--b1);
+    --foreground: var(--bc);
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: var(--b1);
+    --popover-foreground: var(--bc);
+
+    --card: var(--b2);
+    --card-foreground: var(--bc);
+
+    --border: var(--b3);
+    --input: var(--b3);
+
+    --primary-foreground: var(--pc);
+
+    --secondary-foreground: var(--sc);
+
+    --accent-foreground: var(--ac);
+
+    --destructive: var(--er);
+    --destructive-foreground: var(--ec);
+
+    --ring: var(--bc);
+
+    --radius: var(--rounded-btn);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-base-300;
+  }
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
