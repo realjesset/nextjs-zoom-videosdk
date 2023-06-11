@@ -10,7 +10,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          "input-bordered input h-10 w-full text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed",
+          "input-bordered input w-full text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:cursor-not-allowed",
           props.disabled && "input-disabled",
           className
         )}
