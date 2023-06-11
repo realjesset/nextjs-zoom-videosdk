@@ -69,6 +69,6 @@ export default {
   },
   plugins: [require("tailwindcss-animate"), require("daisyui")],
   daisyui: {
-    themes: ["night"],
+    themes: ["business"],
   },
 } satisfies Config;
