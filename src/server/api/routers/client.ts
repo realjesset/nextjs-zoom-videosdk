@@ -1,39 +1,53 @@
 import { env } from "@/env.mjs";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
+import { prisma } from "@/server/db";
 import createJWT from "@/utils/createJWT";
+import { TRPCError } from "@trpc/server";
+import { HttpStatusCode } from "axios";
 import { z } from "zod";
+import { APIReturnType } from "../types/common";
+import { createTokenPayload } from "../utils/create-token-payload";
 
 export const clientRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
   getToken: publicProcedure
     .input(
       z.object({
-        topic: z.string(),
-        role: z.number().min(0).max(1),
-        username: z.string().optional(),
-        password: z.string(),
+        sessionId: z.string(), // scheduled session id
+        userId: z.string(),
+        username: z.string(),
       })
     )
-    .query(({ input }) => {
-      const iat = Math.round(new Date().getTime() / 1000) - 30;
-      const payload = {
-        app_key: env.SDK_KEY,
-        iat,
-        tpc: input.topic,
-        role_type: input.role,
-        user_identity: input.username,
-        pwd: input.password,
-        cloud_recording_option: 0,
-        cloud_recording_election: 0,
-        session_key: "",
-      };
+    .output(APIReturnType(z.string()))
+    .query(async ({ input }) => {
+      const session = await prisma.scheduledSession.findUnique({
+        where: {
+          id: input.sessionId,
+        },
+      });
 
-      return createJWT(payload, env.SDK_SECRET);
+      if (!session) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Session not found",
+        });
+      }
+
+      /** token which is used to join videoSDK sessions */
+      const token = createJWT(
+        createTokenPayload({
+          app_key: env.SDK_KEY,
+          tpc: session.id, // internal tracking
+          user_identity: input.username,
+          session_key: session.hostId,
+          role_type: input.userId === session.hostId ? 1 : 0,
+          iat: Math.round(new Date().getTime() / 1000) - 30,
+        }),
+        env.SDK_SECRET
+      );
+
+      return {
+        status: HttpStatusCode.Ok,
+        data: token,
+      };
     }),
 });
