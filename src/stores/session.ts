@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import useControlStore from "./control";
+import useManagerStore from "./manager";
 import useZoomStore from "./zoom";
 
 // if on popover, wait few seconds before disconnecting on /session
@@ -39,14 +41,13 @@ const useSesssionStore = create(
         if (!client) return { state: "idle", error: "Zoom Client not ready" };
         const session = get().data;
         try {
-          console.log("[SessionStore] Joining Session");
           set({ state: "joining" });
           if (!session) {
             throw new Error("Session not found");
           }
           await client?.join(
-            session.id as string,
             session.topic,
+            session.token,
             session.username,
             "1234567"
           );
@@ -61,15 +62,21 @@ const useSesssionStore = create(
       },
       leave: async (end) => {
         try {
-          console.info("[SessionStore] Leaving Session");
           set({ state: "leaving" });
           await useZoomStore.getState().client?.leave(end);
         } catch (e) {
           console.error("[SessionStore] ", e);
-          set({ state: "joined" });
-          return { state: "joined", error: "Error leaving session" };
+          set({ state: "idle" });
+          return { state: "idle", error: "Error leaving session" };
         } finally {
           set({ data: undefined, state: "idle" });
+          useControlStore.setState({
+            isAudioMuted: false,
+            isVideoOn: false,
+            isHostMuted: false,
+            audioError: null,
+          });
+          useManagerStore.setState({ stream: undefined });
           return { state: "idle" };
         }
       },
