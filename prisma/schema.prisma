@@ -29,7 +29,9 @@ enum SessionStatus {
 }
 
 model ScheduledSession {
+    /// use this as session topic to join
     id                String        @id @default(cuid())
+    /// name of the session (zoom session name is session ID instead of name)
     name              String
     hostId            String
     hostname          String
