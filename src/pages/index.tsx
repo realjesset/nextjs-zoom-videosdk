@@ -11,6 +11,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 
 const Home: NextPage = () => {
   const userId = useUserStore((s) => s.userId);
+  const leave = useSesssionStore((s) => s.leave);
   const { data: sessions, refetch } = api.session.list.useQuery();
   const { mutate: startSession } = api.session.start.useMutation();
   const { mutate: deleteSession } = api.session.delete.useMutation();
@@ -30,7 +31,7 @@ const Home: NextPage = () => {
           sessions.data.map((session) => (
             <div
               key={session.id}
-              className="flex w-full select-none gap-1 bg-base-200/40 shadow-xl"
+              className="card w-full select-none flex-row gap-1 bg-base-200/40 shadow-xl"
             >
               <div className="card-body">
                 <div
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
                     if (isStarted(session.state) || session.hostId !== userId)
                       return;
                     startSession({ id: session.id, userId });
+                    void leave();
                   }}
                   className={cn(
                     "btn",
@@ -73,7 +75,8 @@ const Home: NextPage = () => {
                 </Link>
                 {session.hostId === userId && (
                   <button
-                    className="btn-error btn-outline btn self-center text-xl"
+                    className="btn-error btn-outline btn tooltip self-center text-xl"
+                    data-tip="Delete Session"
                     onClick={() =>
                       deleteSession(
                         { id: session.id },

@@ -34,7 +34,6 @@ const CreateSession = () => {
       console.error(err);
     },
   });
-  console.log(userId, username);
   const form = useForm<RouterInputs["session"]["create"]>({
     resolver: zodResolver(
       z.object({
@@ -67,8 +66,7 @@ const CreateSession = () => {
             name="name"
             render={({ field, formState }) => (
               <FormItem>
-                <FormLabel>Session Name</FormLabel>
-                {JSON.stringify(formState.errors)}
+                <FormLabel className="font-semibold">Session Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="test lobby"
@@ -76,7 +74,7 @@ const CreateSession = () => {
                     {...field}
                   />
                 </FormControl>
-                <FormDescription>
+                <FormDescription className="text-base-content/50">
                   Users will be able to find your session by this name.
                 </FormDescription>
                 <FormMessage />
