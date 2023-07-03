@@ -6,6 +6,7 @@ import useZoomStore from "./zoom";
 type ControlStore = {
   isAudioMuted: boolean;
   isHostMuted: boolean;
+  isVideoLoading?: boolean;
   isVideoOn: boolean;
   audioError: AudioErrorState | null;
   toggleAudio: (mute?: boolean) => Promise<void>;
@@ -47,27 +48,34 @@ const useControlStore = create<ControlStore>((set, get) => ({
     }
   },
   toggleVideo: async () => {
+    set({ isVideoLoading: true });
     const stream = useManagerStore.getState().stream;
     if (!stream) return;
 
-    const isVideoOn = stream.isCapturingVideo();
-    if (isVideoOn) await stream.stopVideo();
-    else
-      await stream.startVideo({
-        mirrored: true,
-        videoElement: stream.isRenderSelfViewWithVideoElement()
-          ? (document.getElementById(
-              `video-${
-                useZoomStore
-                  .getState()
-                  .client?.getCurrentUserInfo()
-                  .userId.toString() || ""
-              }`
-            ) as HTMLVideoElement)
-          : undefined,
-      });
+    try {
+      const isVideoOn = stream.isCapturingVideo();
+      if (isVideoOn) await stream.stopVideo();
+      else
+        await stream.startVideo({
+          mirrored: true,
+          videoElement: stream.isRenderSelfViewWithVideoElement()
+            ? (document.getElementById(
+                `video-${
+                  useZoomStore
+                    .getState()
+                    .client?.getCurrentUserInfo()
+                    .userId.toString() || ""
+                }`
+              ) as HTMLVideoElement)
+            : undefined,
+        });
 
-    set({ isVideoOn: !isVideoOn });
+      set({ isVideoOn: !isVideoOn });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ isVideoLoading: false });
+    }
   },
 }));
 
