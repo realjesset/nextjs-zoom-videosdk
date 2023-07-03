@@ -1,9 +1,10 @@
 import { exampleRouter } from "@/server/api/routers/example";
 import { createTRPCRouter } from "@/server/api/trpc";
 import { clientRouter } from "./routers/client";
-import { sessionRouter } from "./routers/sessions";
 import { webhookRouter } from "./routers/webhook";
 
+import EE from "./event-emitter";
+import { sessionRouter } from "./routers/session";
 /**
  * This is the primary router for your server.
  *
@@ -11,10 +12,13 @@ import { webhookRouter } from "./routers/webhook";
  */
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
-  session: sessionRouter,
   client: clientRouter,
   webhook: webhookRouter,
+  session: sessionRouter,
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
+
+/** event emitter */
+export const ee = new EE();
