@@ -7,7 +7,7 @@ const FullControlPanel = () => {
   return (
     <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 -translate-y-1/2 transform justify-center">
       {/* TODO add a notification panel above control panel */}
-      <div className="flex gap-6 rounded-full bg-base-200 p-4 backdrop-blur-xl">
+      <div className="flex gap-6 rounded-full bg-base-content p-4 backdrop-blur-xl">
         <VideoControl />
         <MuteControl />
         <HangupControl />

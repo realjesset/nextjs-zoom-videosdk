@@ -28,8 +28,8 @@ const MuteControl = () => {
     >
       <button
         className={cn("btn-circle btn", {
-          "btn-neutral": !permissionError && !control?.isAudioMuted,
-          "btn-primary": !permissionError && control?.isAudioMuted,
+          "btn-primary": !permissionError && !control?.isAudioMuted,
+          "btn-secondary": !permissionError && control?.isAudioMuted,
           "btn-disabled": permissionError,
         })}
         onClick={() => void onClick()}
