@@ -49,7 +49,7 @@ const Grid = ({ className }: Props) => {
   return (
     <div className="">
       <div className={cn("relative h-[95vh] bg-base-200/50 p-2", className)}>
-        {participants && (
+        {participants.length > 1 && (
           <div
             className={cn(
               `grid h-full w-full grid-cols-3 grid-rows-3 items-center gap-2`
