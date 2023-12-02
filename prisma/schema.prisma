@@ -12,7 +12,7 @@ datasource db {
 }
 
 generator zod {
-    provider = "pnpx zod-prisma-types"
+    provider = "pnpm exec zod-prisma-types"
     output   = "./generated/zod.ts"
 }
 
