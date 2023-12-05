@@ -19,21 +19,23 @@ const AudioWrapper = ({ initiallyMuted }: Props) => {
   const client = useZoomStore((s) => s.client);
   const stream = useManagerStore((s) => s.stream);
 
+  const startAudio = async () => {
+    try {
+      // TODO safari does not support this (refactor for safari)
+      await stream?.startAudio({
+        backgroundNoiseSuppression: true,
+        mute: initiallyMuted ?? true,
+        autoStartAudioInSafari: true,
+      });
+    } catch (error) {
+      console.error("[Audio] Error starting audio", error);
+    }
+  };
+
   useEffect(() => {
     if (!client || !client.getSessionInfo().isInMeeting || !stream) return;
 
-    void (async () => {
-      try {
-        // TODO safari does not support this (refactor for safari)
-        await stream?.startAudio({
-          backgroundNoiseSuppression: true,
-          mute: initiallyMuted ?? true,
-          autoStartAudioInSafari: true,
-        });
-      } catch (error) {
-        console.error("[Audio] Error starting audio", error);
-      }
-    })();
+    void startAudio();
   }, [client, initiallyMuted, stream]);
 
   useEffect(() => {

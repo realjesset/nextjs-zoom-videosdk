@@ -17,7 +17,7 @@ const Session = () => {
       <StatisticsWrapper /> {/* statistics handler */}
       <ParticipantWrapper /> {/* particiapnts events */}
       <AudioWrapper /> {/* self audio events  */}
-      <InviteByPhone />
+      {/* <InviteByPhone /> */}
       <Grid />
     </>
   );
